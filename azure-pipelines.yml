@@ -6,6 +6,9 @@ pool:
 
 variables:
   imageName: 'pipelines-javascript-docker'
+  semver-long: '1.2.3'
+  semver-med: '1.2'
+  semver-short: '1'
 
 steps:
 - task: Docker@2
@@ -20,6 +23,7 @@ steps:
     command: buildAndPush
     Dockerfile: app/Dockerfile
     tags: |
-      $(System.JobId)
-      $(Build.SourceBranchName)
-      $(Build.SourceVersion)
+      $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+      $(semver-long)
+      $(semver-med)
+      $(semver-short)
