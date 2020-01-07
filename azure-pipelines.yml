@@ -6,7 +6,7 @@ pool:
 
 variables:
   imageName: 'pipelines-javascript-docker'
-  semver: '1.2.3'
+  semver: '2.4.1'
 
 steps:
 - bash: |
