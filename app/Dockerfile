@@ -1,5 +1,7 @@
 FROM node:8
 
+RUN cd /tmp && echo "hello!"
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
