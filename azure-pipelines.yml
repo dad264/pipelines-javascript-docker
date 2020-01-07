@@ -6,11 +6,17 @@ pool:
 
 variables:
   imageName: 'pipelines-javascript-docker'
-  semver-long: '1.2.3'
-  semver-med: '1.2'
-  semver-short: '1'
+  semver: '1.2.3'
 
 steps:
+- bash: |
+    SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
+    SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
+    
+    # create pipeline variables
+    echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
+    echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
+
 - task: Docker@2
   displayName: Login to Quay.io
   inputs:
@@ -24,6 +30,6 @@ steps:
     Dockerfile: app/Dockerfile
     tags: |
       $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
-      $(semver-long)
-      $(semver-med)
+      $(semver)
+      $(semver-medium)
       $(semver-short)
