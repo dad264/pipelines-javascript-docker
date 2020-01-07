@@ -20,5 +20,5 @@ steps:
     command: buildAndPush
     Dockerfile: app/Dockerfile
     tags: |
-      tag1
-      tag2
+      dad264/tag1
+      dad264/tag2
