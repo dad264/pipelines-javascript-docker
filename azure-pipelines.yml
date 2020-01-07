@@ -62,9 +62,9 @@ stages:
   jobs:
   - job: anchore
     displayName: CVE Scan
-    container: 
-      image: anchore/engine-cli:latest
+    #container: 
+    #  image: anchore/engine-cli:latest
     steps:
-    - script: anchore-cli image add ${ANCHORE_SCAN_IMAGE}
+    - script: docker run -it anchore/engine-cli:latest anchore-cli image add ${ANCHORE_SCAN_IMAGE}
     - script: anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
     - script: anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
