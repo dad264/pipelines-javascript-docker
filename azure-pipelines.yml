@@ -8,31 +8,41 @@ variables:
   imageName: 'pipelines-javascript-docker'
   semver: '2.4.1'
 
-jobs:
-- job: Dockerize
-  displayName: Docker Build and Push
-  steps:
-  - bash: |
-      SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
-      SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
-      
-      # create pipeline variables
-      echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
-      echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
+stages:
+- stage: lint
+  jobs:
+  - job: lint
+    displayName: Dockerfile Lint
+    steps:
+    - bash: |
+      echo this is dockerfile linting
 
-  - task: Docker@2
-    displayName: Login to Quay.io
-    inputs:
-      command: login
-      containerRegistry: quay.io
-  - task: Docker@2
-    displayName: Build and Push
-    inputs:
-      repository: dad264/$(imageName)
-      command: buildAndPush
-      Dockerfile: app/Dockerfile
-      tags: |
-        $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
-        $(semver)
-        $(semver-medium)
-        $(semver-short)
+- stage: Dockerize
+  jobs:
+  - job: Dockerize
+    displayName: Docker Build and Push
+    steps:
+    - bash: |
+        SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
+        SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
+        
+        # create pipeline variables
+        echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
+        echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
+
+    - task: Docker@2
+      displayName: Login to Quay.io
+      inputs:
+        command: login
+        containerRegistry: quay.io
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        repository: dad264/$(imageName)
+        command: buildAndPush
+        Dockerfile: app/Dockerfile
+        tags: |
+          $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+          $(semver)
+          $(semver-medium)
+          $(semver-short)
