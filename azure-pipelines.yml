@@ -13,7 +13,7 @@ stages:
   jobs:
   - job: lint
     displayName: Dockerfile Lint
-    container: hadolint/hadolint
+    container: hadolint/hadolint:latest
     steps:
     - bash: |
         echo "this is dockerfile linting"
