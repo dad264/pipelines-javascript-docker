@@ -14,8 +14,7 @@ stages:
   - job: lint
     displayName: Dockerfile Lint
     container: 
-      image: quay.io/pennstate/kube-utils:v9.10.0
-      options: --entrypoint /bin/bash
+      image: hadolint/hadolint:latest-debian
     steps:
     - script: hadolint app/Dockerfile
 
