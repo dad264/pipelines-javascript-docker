@@ -13,7 +13,7 @@ stages:
   jobs:
   - job: lint
     displayName: Dockerfile Lint
-    container: hadolint/hadolint:latest
+    container: quay.io/pennstate/kube-utils:v9.10.0
     steps:
     - bash: |
         echo "this is dockerfile linting"
