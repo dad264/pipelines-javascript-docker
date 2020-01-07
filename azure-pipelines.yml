@@ -16,7 +16,8 @@ stages:
     container: 
       image: hadolint/hadolint:latest-debian
     steps:
-    - script: hadolint app/Dockerfile
+    - bash: hadolint app/Dockerfile
+      failOnStderr: true
 
 - stage: dockerize
   jobs:
