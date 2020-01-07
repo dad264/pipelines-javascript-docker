@@ -16,9 +16,9 @@ steps:
 - task: Docker@2
   displayName: Build and Push
   inputs:
-    repository: $(imageName)
+    repository: dad264/$(imageName)
     command: buildAndPush
     Dockerfile: app/Dockerfile
     tags: |
-      dad264/tag1
-      dad264/tag2
+      tag1
+      $(Build.BuildId)
