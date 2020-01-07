@@ -15,11 +15,11 @@ stages:
     displayName: Dockerfile Lint
     steps:
     - bash: |
-      echo this is dockerfile linting
+        echo "this is dockerfile linting"
 
-- stage: Dockerize
+- stage: dockerize
   jobs:
-  - job: Dockerize
+  - job: dockerize
     displayName: Docker Build and Push
     steps:
     - bash: |
