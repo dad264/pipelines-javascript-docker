@@ -19,6 +19,7 @@ stages:
     - script: hadolint app/Dockerfile
       displayName: hadolint
       failOnStderr: true
+      continueOnError: true
 
 - stage: dockerize
   jobs:
