@@ -5,8 +5,11 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
-  imageName: 'pipelines-javascript-docker'
-  semver: '2.4.1'
+- group: variable group 07-Jan
+- name: imageName
+  value: 'pipelines-javascript-docker'
+- name: semver
+  value: '2.4.1'
 
 stages:
 - stage: lint
@@ -50,3 +53,18 @@ stages:
           $(semver)
           $(semver-medium)
           $(semver-short)
+
+- stage: anchore
+  variables:
+    ANCHORE_CLI_URL: "https://anchore.qa.k8s.psu.edu/v1/"
+    ANCHORE_SCAN_IMAGE: quay.io/dad264/$(imageName):$(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+    ANCHORE_RETRIES: 20    
+  jobs:
+  - job: anchore
+    displayName: CVE Scan
+    container: 
+      image: anchore/engine-cli:latest
+    steps:
+    - script: anchore-cli image add ${ANCHORE_SCAN_IMAGE}
+    - script: anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
+    - script: anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
