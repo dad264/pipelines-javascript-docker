@@ -21,6 +21,6 @@ steps:
     Dockerfile: app/Dockerfile
     tags: |
       tag1
-      $(Date:yyyyMMdd)$(Rev:.r)
+      $(System.JobId)
       $(SourceBranchName)
       $(Build.SourceVersion)
