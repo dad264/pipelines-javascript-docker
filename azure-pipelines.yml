@@ -13,9 +13,11 @@ stages:
   jobs:
   - job: lint
     displayName: Dockerfile Lint
+    container: hadolint/hadolint
     steps:
     - bash: |
         echo "this is dockerfile linting"
+    - script: hadolint app/Dockerfile
 
 - stage: dockerize
   jobs:
