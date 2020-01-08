@@ -68,6 +68,10 @@ stages:
     - script: docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image add ${ANCHORE_SCAN_IMAGE}
       env:
         ANCHORE_CLI_PASS: $(ANCHORE_CLI_PASS)
-    - script: curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -p ${ANCHORE_SCAN_IMAGE}
-    - script: anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
-    - script: anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
+    - script: docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
+      env:
+        ANCHORE_CLI_PASS: $(ANCHORE_CLI_PASS)
+    - script: docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
+      env:
+        ANCHORE_CLI_PASS: $(ANCHORE_CLI_PASS)
+    # - script: curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -p ${ANCHORE_SCAN_IMAGE}
