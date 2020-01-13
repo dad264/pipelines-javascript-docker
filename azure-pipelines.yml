@@ -19,7 +19,7 @@ stages:
   - job: major_release
     displayName: Major Release
     steps:
-    - shell: echo MAJOR
+    - bash: echo MAJOR
       displayName: Major Release
 
 - stage: lint
