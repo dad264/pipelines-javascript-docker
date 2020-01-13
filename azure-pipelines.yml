@@ -48,50 +48,50 @@ stages:
       failOnStderr: true
       continueOnError: true
 
-- stage: dockerize
-  jobs:
-  - job: dockerize
-    displayName: Docker Build and Push
-    steps:
-    - bash: |
-        SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
-        SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
+# - stage: dockerize
+#   jobs:
+#   - job: dockerize
+#     displayName: Docker Build and Push
+#     steps:
+#     - bash: |
+#         SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
+#         SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
         
-        # create pipeline variables
-        echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
-        echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
+#         # create pipeline variables
+#         echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
+#         echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
 
-    - task: Docker@2
-      displayName: Login to Quay.io
-      inputs:
-        command: login
-        containerRegistry: quay.io
-    - task: Docker@2
-      displayName: Build and Push
-      inputs:
-        repository: dad264/$(imageName)
-        command: buildAndPush
-        Dockerfile: app/Dockerfile
-        tags: |
-          $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
-          $(semver)
-          $(semver-medium)
-          $(semver-short)
+#     - task: Docker@2
+#       displayName: Login to Quay.io
+#       inputs:
+#         command: login
+#         containerRegistry: quay.io
+#     - task: Docker@2
+#       displayName: Build and Push
+#       inputs:
+#         repository: dad264/$(imageName)
+#         command: buildAndPush
+#         Dockerfile: app/Dockerfile
+#         tags: |
+#           $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+#           $(semver)
+#           $(semver-medium)
+#           $(semver-short)
 
-- stage: anchore
-  variables:
-    ANCHORE_CLI_URL: "https://anchore.qa.k8s.psu.edu/v1/"
-    ANCHORE_SCAN_IMAGE: quay.io/dad264/$(imageName):$(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
-    ANCHORE_RETRIES: 20    
-  jobs:
-  - job: anchore
-    displayName: CVE Scan
-    steps:
-    - bash: |
-        docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image add ${ANCHORE_SCAN_IMAGE}
-        docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
-        docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
-      displayName: Anchore
-      env:
-        ANCHORE_CLI_PASS: $(ANCHORE_CLI_PASS)
-    # - script: curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -p ${ANCHORE_SCAN_IMAGE}
+# - stage: anchore
+#   variables:
+#     ANCHORE_CLI_URL: "https://anchore.qa.k8s.psu.edu/v1/"
+#     ANCHORE_SCAN_IMAGE: quay.io/dad264/$(imageName):$(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+#     ANCHORE_RETRIES: 20    
+#   jobs:
+#   - job: anchore
+#     displayName: CVE Scan
+#     steps:
+#     - bash: |
+#         docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image add ${ANCHORE_SCAN_IMAGE}
+#         docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli image wait ${ANCHORE_SCAN_IMAGE}
+#         docker run -e ANCHORE_CLI_URL=${ANCHORE_CLI_URL} -e ANCHORE_CLI_USER=${ANCHORE_CLI_USER} -e ANCHORE_CLI_PASS=${ANCHORE_CLI_PASS} anchore/engine-cli:latest anchore-cli evaluate check ${ANCHORE_SCAN_IMAGE} --detail
+#       displayName: Anchore
+#       env:
+#         ANCHORE_CLI_PASS: $(ANCHORE_CLI_PASS)
+#     # - script: curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -p ${ANCHORE_SCAN_IMAGE}
