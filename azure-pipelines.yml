@@ -10,28 +10,29 @@ variables:
   value: 'pipelines-javascript-docker'
 - name: semver
   value: '2.4.1'
-- name: git-release
-  value: ''
+
 
 
 stages:
 - stage: release
+  variables: 
+    gitrelease: ''
   jobs:
   - job: major_release
     displayName: Major Release
-    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['git-release'], 'major'))
+    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'major'))
     steps:
     - bash: echo MAJOR
       displayName: Major Release
   - job: minor_release
     displayName: Minor Release
-    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['git-release'], 'minor'))
+    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'minor'))
     steps:
     - bash: echo MINOR
       displayName: Minor Release
   - job: patch_release
     displayName: Patch Release
-    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['git-release'], 'patch'))
+    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'patch'))
     steps:
     - bash: echo PATCH
       displayName: Patch Release
