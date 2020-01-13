@@ -15,8 +15,8 @@ variables:
 
 stages:
 - stage: release
-  variables: 
-    gitrelease: ''
+  # variables: 
+  #   gitrelease: ''
   jobs:
   - job: major_release
     displayName: Major Release
