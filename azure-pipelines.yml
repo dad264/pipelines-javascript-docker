@@ -22,8 +22,6 @@ stages:
     - shell: echo MAJOR
       displayName: Major Release
 
-
-stages:
 - stage: lint
   jobs:
   - job: lint
