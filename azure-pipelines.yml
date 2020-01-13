@@ -23,6 +23,18 @@ stages:
     steps:
     - bash: echo MAJOR
       displayName: Major Release
+  - job: minor_release
+    displayName: Minor Release
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+    steps:
+    - bash: echo MINOR
+      displayName: Minor Release
+  - job: patch_release
+    displayName: Patch Release
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+    steps:
+    - bash: echo PATCH
+      displayName: Patch Release
 
 - stage: lint
   jobs:
