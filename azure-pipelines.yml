@@ -10,6 +10,8 @@ variables:
   value: 'pipelines-javascript-docker'
 - name: semver
   value: '2.4.1'
+- name: git-release
+  value: ''
 
 
 stages:
