@@ -14,10 +14,10 @@ variables:
 
 stages:
 - stage: release
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
   jobs:
   - job: major_release
     displayName: Major Release
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
     steps:
     - bash: echo MAJOR
       displayName: Major Release
