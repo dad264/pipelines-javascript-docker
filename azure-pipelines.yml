@@ -14,6 +14,9 @@ variables:
 
 
 stages:
+- stage: tagging
+  template: tagging.yml
+
 - stage: release
   # variables: 
   #   gitrelease: ''
