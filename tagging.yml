@@ -2,14 +2,11 @@ trigger:
   tags:
     include: "v*"
 
-stages:
-- stage: tag
-  # variables: 
-  #   gitrelease: ''
-  jobs:
-  - job: tag
-    displayName: Tag
-    # condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'major'))
-    steps:
-    - bash: echo Tag that stuff
-      displayName: Tag Release
+
+jobs:
+- job: tag
+  displayName: Tag
+  # condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'major'))
+  steps:
+  - bash: echo Tag that stuff
+    displayName: Tag Release

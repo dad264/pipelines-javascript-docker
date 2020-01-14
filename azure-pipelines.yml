@@ -14,7 +14,7 @@ variables:
 
 
 stages:
-# - stage: tagging
+- stage: tagging
   template: tagging.yml
 
 - stage: release
