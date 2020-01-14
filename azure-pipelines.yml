@@ -16,7 +16,7 @@ variables:
 stages:
 - stage: tagging
   jobs:
-    template: tagging.yml
+  - template: tagging.yml
 
 - stage: release
   # variables: 
