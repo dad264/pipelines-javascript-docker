@@ -16,7 +16,12 @@ variables:
 stages:
 - stage: tagging
   jobs:
-  - template: tagging.yml
+  - job: tag
+    displayName: Tag
+    condition: and(eq(variables['Build.Reason'], 'IndividualCI'), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    steps:
+    - bash: echo Tag that stuff
+      displayName: Tag Release
 
 - stage: release
   # variables: 
