@@ -11,10 +11,8 @@ stages:
     steps:
     - bash: |
         git clone https://github.com/PennState/git-semver.git
-        git-semver/install.sh
-      displayName: Install git-semver
-    - bash: |
-        SEMVER=$(git semver get)
+        
+        SEMVER=$(git-semver/git-semver.sh get)
         SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
         SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
         
