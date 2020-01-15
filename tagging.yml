@@ -12,7 +12,7 @@ stages:
     - bash: |
         git clone https://github.com/PennState/git-semver.git
         
-        SEMVER=$(git-semver/git-semver.sh get)
+        SEMVER=$(git-semver/git-semver.sh get | sed 's/^v//' )
         SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
         SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
         
@@ -29,7 +29,7 @@ stages:
     - task: Docker@2
       displayName: Build and Push
       inputs:
-        repository: dad264/$(Build.Repository.Name)
+        repository: $(Build.Repository.Name)
         command: buildAndPush
         Dockerfile: app/Dockerfile
         tags: |
