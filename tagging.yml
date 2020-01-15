@@ -31,7 +31,7 @@ stages:
     - task: Docker@2
       displayName: Build and Push
       inputs:
-        repository: dad264/$(imageName)
+        repository: dad264/$(Build.Repository.Name)
         command: buildAndPush
         Dockerfile: app/Dockerfile
         tags: |
