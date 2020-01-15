@@ -3,11 +3,39 @@ trigger:
     include: 
     - v*
 
-
-jobs:
-- job: tag
-  displayName: Tag
-  # condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'major'))
-  steps:
-  - bash: echo Tag that stuff
-    displayName: Tag Release
+stages:
+- stage: dockerize
+  jobs:
+  - job: dockerize
+    displayName: Docker Multi-tag
+    steps:
+    - bash: |
+        git clone https://github.com/PennState/git-semver.git
+        git-semver/install.sh
+      displayName: Install git-semver
+    - bash: |
+        SEMVER=$(git semver get)
+        SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
+        SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
+        
+        # create pipeline variables
+        echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
+        echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
+        echo "##vso[task.setvariable variable=semver]$SEMVER"
+      displayName: Setup semver vars
+    - task: Docker@2
+      displayName: Login to Quay.io
+      inputs:
+        command: login
+        containerRegistry: quay.io
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        repository: dad264/$(imageName)
+        command: buildAndPush
+        Dockerfile: app/Dockerfile
+        tags: |
+          $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+          $(semver)
+          $(semver-medium)
+          $(semver-short)
