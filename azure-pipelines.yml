@@ -31,19 +31,19 @@ stages:
     displayName: Major Release
     condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'major'))
     steps:
-    - bash: echo MAJOR
+    - bash: echo MAJOR && git rev-parse --short HEAD
       displayName: Major Release
   - job: minor_release
     displayName: Minor Release
     condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'minor'))
     steps:
-    - bash: echo MINOR
+    - bash: echo MINOR && git rev-parse --short HEAD
       displayName: Minor Release
   - job: patch_release
     displayName: Patch Release
     condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['gitrelease'], 'patch'))
     steps:
-    - bash: echo PATCH
+    - bash: echo PATCH && git rev-parse --short HEAD
       displayName: Patch Release
 
 - stage: lint
