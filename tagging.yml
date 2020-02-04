@@ -15,11 +15,13 @@ stages:
         SEMVER=$(git-semver/git-semver.sh get | sed 's/^v//' )
         SEMVER_MEDIUM=$(echo $SEMVER | cut -d '.' -f1,2)
         SEMVER_SHORT=$(echo $SEMVER | cut -d '.' -f1)
+        SHORT_SHA=$(git rev-parse --short HEAD)
         
         # create pipeline variables
         echo "##vso[task.setvariable variable=semver-medium]$SEMVER_MEDIUM"
         echo "##vso[task.setvariable variable=semver-short]$SEMVER_SHORT"
         echo "##vso[task.setvariable variable=semver]$SEMVER"
+        echo "##vso[task.setvariable variable=short-sha]$SHORT_SHA"
       displayName: Setup semver vars
     - task: Docker@2
       displayName: Login to Quay.io
@@ -34,6 +36,7 @@ stages:
         Dockerfile: app/Dockerfile
         tags: |
           $(Build.SourceBranchName)-$(Build.SourceVersion)-$(Build.BuildNumber)
+          $(Build.SourceBranchName)-$(short-sha)-$(Build.BuildNumber)
           $(semver)
           $(semver-medium)
           $(semver-short)
